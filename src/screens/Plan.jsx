@@ -1,30 +1,23 @@
-import { useContext, useEffect, useState } from "react";
-import { DataContext } from "../context/DataContext";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { TbSquareRoundedPlusFilled } from "react-icons/tb";
+import { IoIosAddCircle } from "react-icons/io";
+
 import Modal from "../components/Modal";
+import { useDispatch, useSelector } from "react-redux";
+import { addDay, updateLocalStorage } from "../state/plansSlice";
+import toast from "react-hot-toast";
 
 export default function Plan() {
-    const { plans, setPlans } = useContext(DataContext);
-    const [days, setDays] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState("");
     const { PLAN } = useParams();
+    const days = useSelector((state) => state.plans[PLAN].days);
     const navigate = useNavigate();
-    useEffect(() => {
-        localStorage.setItem("plans", JSON.stringify(plans));
-    }, [plans]);
 
-    useEffect(() => {
-        let d = [];
-        plans[PLAN]?.days?.map((day) => {
-            d.push(day);
-        });
-        setDays([...d]);
-    }, [plans, PLAN]);
+    const dispatch = useDispatch();
 
     return (
-        <div className="flex flex-col py-10 gap-5 items-center justify-center ">
+        <div className="flex flex-col h-[99dvh] pb-5 gap-5 items-center justify-center ">
             {isOpen && (
                 <Modal
                     onClose={() => {
@@ -32,24 +25,17 @@ export default function Plan() {
                         setIsOpen(false);
                     }}
                     onConfirm={() => {
-                        setPlans((prev) =>
-                            prev.map((p) =>
-                                p.id == PLAN
-                                    ? {
-                                          ...p,
-                                          days: [
-                                              ...p.days,
-                                              {
-                                                  id: p.days.length,
-                                                  day: name,
-                                                  exercises: [],
-                                              },
-                                          ],
-                                      }
-                                    : p
-                            )
+                        if (name == "") {
+                            toast.dismiss();
+                            return toast.error("Please provide a name");
+                        }
+                        dispatch(
+                            addDay({
+                                plan: PLAN,
+                                day: name,
+                            })
                         );
-
+                        dispatch(updateLocalStorage());
                         setIsOpen(false);
                         setName("");
                     }}>
@@ -68,26 +54,29 @@ export default function Plan() {
                     </div>
                 </Modal>
             )}
-            {days &&
-                days.map((day) => {
-                    return (
-                        <div
-                            onClick={() => {
-                                navigate(`${day.id}`);
-                            }}
-                            className="bg-stone-300 flex items-center justify-center rounded-lg h-60 w-10/12"
-                            key={Math.random()}>
-                            {day.day}
-                        </div>
-                    );
-                })}
-            <TbSquareRoundedPlusFilled
+            <div className="overflow-y-auto flex flex-col items-center gap-5 w-full h-[80dvh]">
+                {days &&
+                    days.map((day) => {
+                        return (
+                            <div
+                                onClick={() => {
+                                    navigate(`${day.id}`);
+                                }}
+                                className="bg-stone-300 flex items-center justify-center flex-shrink-0 rounded-lg h-60 w-10/12"
+                                key={Math.random()}>
+                                {day.day}
+                            </div>
+                        );
+                    })}
+            </div>
+
+            <IoIosAddCircle
                 onClick={() => {
                     setIsOpen(true);
                 }}
                 size={70}
                 color="#22C55E"
-                className="rounded-lg  absolute bottom-10 right-5"
+                className="rounded-lg  absolute bottom-3 right-3"
             />
         </div>
     );

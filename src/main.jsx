@@ -8,11 +8,15 @@ import Day from "./screens/Day.jsx";
 import Exercise from "./screens/Exercise.jsx";
 import Home from "./screens/Home.jsx";
 import Play from "./screens/Play.jsx";
+import { store } from "./state/store.js";
+import { Provider } from "react-redux";
+import ErrorElement from "./components/ErrorElement.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/Workout-Plan",
         element: <App />,
+        errorElement: <ErrorElement />,
         children: [
             {
                 path: "/Workout-Plan/",
@@ -38,7 +42,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-    <RouterProvider router={router}>
-        <App />
-    </RouterProvider>
+    <Provider store={store}>
+        <RouterProvider router={router}>
+            <App />
+        </RouterProvider>
+    </Provider>
 );

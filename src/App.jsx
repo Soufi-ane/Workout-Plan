@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
-
-import Home from "./screens/Home";
+import { Toaster } from "react-hot-toast";
 import Header from "./components/Header";
-import { Outlet, useNavigate } from "react-router-dom";
-import { DataContext } from "./context/DataContext";
+import { Outlet } from "react-router-dom";
 
 const Plans = [
     {
         id: 0,
         plan: "plan1",
-        description: "work hard",
+
         days: [
             {
                 id: 0,
@@ -52,7 +49,7 @@ const Plans = [
     {
         id: 1,
         plan: "plan2",
-        description: "who's gonna carry the boats",
+
         days: [
             {
                 id: 0,
@@ -129,30 +126,19 @@ const Plans = [
         ],
     },
 ];
-
+localStorage.setItem("plans", JSON.stringify(Plans));
 function App() {
-    // localStorage.setItem("plans", JSON.stringify(Plans));
-    const ps = localStorage.getItem("plans") || "[]";
-    const [plans, setPlans] = useState(JSON.parse(ps));
-
-    const navigate = useNavigate();
-
     return (
-        <DataContext.Provider
-            value={{
-                plans,
-                setPlans,
+        <div
+            style={{
+                fontFamily: "Poppins",
+                fontWeight: "600",
+                fontStyle: "normal",
             }}>
-            <div
-                style={{
-                    fontFamily: "Poppins",
-                    fontWeight: "600",
-                    fontStyle: "normal",
-                }}>
-                <Header />
-                <Outlet />
-            </div>
-        </DataContext.Provider>
+            <Toaster />
+            <Header />
+            <Outlet />
+        </div>
     );
 }
 
