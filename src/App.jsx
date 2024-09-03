@@ -22,7 +22,7 @@ function App() {
                     fontWeight: "600",
                     fontStyle: "normal",
                 }}
-                className="h-[100dvh] flex items-center justify-center w-full text-[1.10rem]">
+                className="h-[100dvh] items-center justify-center w-full hidden sm:flex text-[1.10rem]">
                 Use a smaller screen for a better experience
             </div>
         </>
