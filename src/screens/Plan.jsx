@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoIosAddCircle } from "react-icons/io";
-
+import { MdDeleteForever } from "react-icons/md";
 import Modal from "../components/Modal";
+import Empty from "../components/Empty";
 import { useDispatch, useSelector } from "react-redux";
-import { addDay, updateLocalStorage } from "../state/plansSlice";
+import { addDay, updateLocalStorage, deleteDay } from "../state/plansSlice";
 import toast from "react-hot-toast";
 
 export default function Plan() {
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState("");
     const { PLAN } = useParams();
-    const days = useSelector((state) => state.plans[PLAN].days);
+    const days = useSelector((state) => state.plans[PLAN]?.days);
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -35,7 +36,7 @@ export default function Plan() {
                                 day: name,
                             })
                         );
-                        dispatch(updateLocalStorage());
+                        dispatch(updateLocalStorage("Added"));
                         setIsOpen(false);
                         setName("");
                     }}>
@@ -54,20 +55,39 @@ export default function Plan() {
                     </div>
                 </Modal>
             )}
-            <div className="overflow-y-auto flex flex-col items-center gap-5 w-full h-[80dvh]">
-                {days &&
+            <p className="text-center">Days</p>
+            <div className="overflow-y-auto flex flex-col items-center gap-5 w-full h-[75dvh]">
+                {days?.length ? (
                     days.map((day) => {
                         return (
-                            <div
-                                onClick={() => {
-                                    navigate(`${day.id}`);
-                                }}
-                                className="bg-stone-300 flex items-center justify-center flex-shrink-0 rounded-lg h-60 w-10/12"
-                                key={Math.random()}>
-                                {day.day}
+                            <div className="bg-stone-200 flex items-center relative justify-center flex-shrink-0 rounded-lg w-11/12" key={Math.random()}>
+                                <MdDeleteForever
+                                    onClick={() => {
+                                        dispatch(
+                                            deleteDay({
+                                                plan: PLAN,
+                                                day: day.id,
+                                            })
+                                        );
+                                        dispatch(updateLocalStorage("Deleted"));
+                                    }}
+                                    color="#e92d2d"
+                                    size={30}
+                                    className="bg-white rounded-full p-1 absolute top-2 right-2"
+                                />
+                                <p
+                                    onClick={() => {
+                                        navigate(`${day.id}`);
+                                    }}
+                                    className="pb-20 pt-8 mt-12 w-80 text-center">
+                                    {day.day}
+                                </p>
                             </div>
                         );
-                    })}
+                    })
+                ) : (
+                    <Empty title="day" />
+                )}
             </div>
 
             <IoIosAddCircle

@@ -1,43 +1,49 @@
-import { useContext, useRef, useState } from "react";
-import { DataContext } from "../context/DataContext";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import Counter from "../components/Counter";
 import Finish from "../components/Finish";
-const start = Math.floor(Date.now() / 1000);
-
 export default function Play() {
+    useEffect(() => {
+        window.addEventListener("beforeunload", (e) => {
+            const msj = "Are you sure ? ";
+            e.returnValue = msj;
+            return msj;
+        });
+    }, []);
     const { PLAN, DAY } = useParams();
-    const exercises = useSelector((state) => state.plans[PLAN].days[DAY].exercises);
+    const exercises = useSelector((state) => state.plans[PLAN].days[DAY].exercises) || [];
 
     const [selected, setSelected] = useState(0);
+    const [isScrolling, setIsScrolling] = useState(false);
 
-    const { totalTime } = useContext(DataContext);
     const [isFinished, setIsFinished] = useState(false);
     const [exercise, setExercise] = useState(0);
     const containerRef = useRef(null);
 
     const scrollLeft = () => {
+        setIsScrolling(true);
         containerRef.current.scrollBy({
             left: window.innerWidth + 5,
             behavior: "smooth",
         });
+        setTimeout(() => {
+            setIsScrolling(false);
+        }, 550);
     };
 
     return (
         <div ref={containerRef} className="py-2 overflow-y-auto h-[100dvh] px-2 gap-5  overflow-x-hidden whitespace-nowrap flex felx-col">
-            {isFinished && <Finish start={start} es={exercises} />}
+            {isFinished && <Finish es={exercises} />}
             {exercises &&
                 !isFinished &&
                 exercises.map((e) => (
                     <div key={Math.random()} className="flex 0 flex-col items-center pt-10 w-full flex-shrink-0  ">
                         <Counter current={selected} betweenTime={exercises[exercise].time_between} />
-                        <p>{totalTime}</p>
-
                         <p className="text-xl capitalize mb-5">{e.exercise}</p>
                         <img className=" w-[60vw] h-[60vw] rounded-lg" src={e.image || "/Workout-Plan/assets/gym.png"} />
-                        <div className="w-full px-3 pb-20 flex flex-col items-center overflow-y-auto mt-3 gap-3">
+                        <div className="w-full h-[22rem] px-3 pb-20 flex flex-col items-center overflow-y-auto mt-3 gap-3">
                             {e.sets.map((set, i) => (
                                 <div
                                     className={` ${
@@ -51,6 +57,7 @@ export default function Play() {
                                     </span>
                                     <button
                                         onClick={() => {
+                                            if (isScrolling) return;
                                             if (selected + 1 < exercises[exercise].sets.length) {
                                                 setSelected((prev) => prev + 1);
                                             } else {

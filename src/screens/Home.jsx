@@ -1,12 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DataContext } from "../context/DataContext";
+
 import { IoIosAddCircle } from "react-icons/io";
 
 import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { addPlan, updateLocalStorage } from "../state/plansSlice";
+import { addPlan, deletePlan, updateLocalStorage } from "../state/plansSlice";
 import toast from "react-hot-toast";
+import { MdDeleteForever } from "react-icons/md";
+import Empty from "../components/Empty";
 
 function Home() {
     const plans = useSelector((state) => state.plans);
@@ -26,7 +28,7 @@ function Home() {
                             return toast.error("Please provide a name");
                         } else {
                             dispatch(addPlan(name));
-                            dispatch(updateLocalStorage());
+                            dispatch(updateLocalStorage("Added"));
                             setIsOpen(false);
                             setName("");
                         }
@@ -41,18 +43,36 @@ function Home() {
                     </div>
                 </Modal>
             )}
-            <div className="flex items-center h-[88dvh] overflow-y-auto flex-col gap-3 py-20">
-                {plans.length &&
+            <p className="pt-16 text-center">Plans</p>
+
+            <div className="flex items-center h-[80dvh] overflow-y-auto flex-col gap-3 pb-20 mt-4 ">
+                {plans?.length ? (
                     plans?.map((plan) => (
-                        <div
-                            key={Math.random()}
-                            onClick={() => {
-                                navigate(`${plan.id}`);
-                            }}
-                            className="bg-stone-200 flex-shrink-0 flex flex-col h-60 w-11/12 justify-center items-center  rounded-xl">
-                            {plan.plan}
+                        <div key={Math.random()} className="bg-stone-200 flex-shrink-0 flex flex-col relative  w-11/12 justify-center items-center  rounded-xl">
+                            <p
+                                onClick={() => {
+                                    navigate(`${plan.id}`);
+                                }}
+                                className="pb-24 pt-12 w-full text-center mt-12">
+                                {plan.plan}
+                            </p>
+                            <MdDeleteForever
+                                onClick={() => {
+                                    dispatch(deletePlan(plan.id));
+                                    dispatch(updateLocalStorage("Deleted"));
+                                }}
+                                color="#e92d2d"
+                                size={30}
+                                className=" bg-white rounded-full p-1 absolute top-2 right-2"
+                            />
                         </div>
-                    ))}
+                    ))
+                ) : (
+                    <>
+                        <Empty title="plan" />
+                        <p className="text-stone-500 text-sm">All data is stored in the local storage !!!</p>
+                    </>
+                )}
 
                 <IoIosAddCircle
                     onClick={() => {

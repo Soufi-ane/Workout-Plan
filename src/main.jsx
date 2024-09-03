@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -16,11 +15,12 @@ const router = createBrowserRouter([
     {
         path: "/Workout-Plan",
         element: <App />,
-        errorElement: <ErrorElement />,
+
         children: [
             {
                 path: "/Workout-Plan/",
                 element: <Home />,
+                errorElement: <ErrorElement />,
             },
             {
                 path: ":PLAN",

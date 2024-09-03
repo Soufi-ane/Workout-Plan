@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
     const navigate = useNavigate();
     return (
-        <div className="flex absolute bg-white justify-between items-center w-screen px-3 py-2">
+        <div className="flex absolute bg-white justify-between items-center z-50 w-screen px-3 py-2">
             <img
                 onClick={() => {
                     navigate("/Workout-Plan");
@@ -12,7 +12,7 @@ const Header = () => {
                 className="w-7 h-7"
             />
             <p className=" leading-8">Workout Plan</p>
-            <TbMenuDeep size={30} />
+            <span className="w-7"></span>
         </div>
     );
 };

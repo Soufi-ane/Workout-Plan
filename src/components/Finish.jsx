@@ -4,7 +4,7 @@ import { formatTime } from "../helpers/helpers";
 import { BiSolidTimer } from "react-icons/bi";
 import { RxDotsHorizontal } from "react-icons/rx";
 
-export default function Finish({ start, es }) {
+export default function Finish({ es }) {
     const navigate = useNavigate();
     return (
         <div className="w-full h[90dvh] flex flex-col py-10 items-center">
@@ -12,14 +12,7 @@ export default function Finish({ start, es }) {
                 <p className="text-xl">Exercise Finished</p>
                 <GoGoal size={28} color="#00D16F" />
             </div>
-            <div className="pb-8 text-sm">
-                <span className=" flex items-center gap-1">
-                    <p>Total Time :</p>
-                    <p>{formatTime(Math.floor(Date.now() / 1000) - start)}</p>
-                    <BiSolidTimer size={23} color="#616161" />
-                </span>
-            </div>
-            <div className="w-11/12 h-[50dvh] overflow-y-auto text-sm flex flex-col items-center gap-2">
+            <div className="w-11/12 h-[59dvh] overflow-y-auto text-sm flex flex-col items-center gap-2">
                 {es.map((e) => (
                     <div className="bg-stone-200 rounded-lg w-11/12 pt-2 px-2 pb-3" key={Math.random()}>
                         <p className="text-center"> {e.exercise}</p>

@@ -2,143 +2,30 @@ import { Toaster } from "react-hot-toast";
 import Header from "./components/Header";
 import { Outlet } from "react-router-dom";
 
-const Plans = [
-    {
-        id: 0,
-        plan: "plan1",
-
-        days: [
-            {
-                id: 0,
-                day: "day one baby",
-                exercises: [
-                    {
-                        id: 0,
-                        exercise: "push up",
-                        sets: [10, 12, 15, 10, 12, 15, 10, 12, 15, 10, 12, 15],
-                        time_between: 60, // in seconds
-                    },
-                    {
-                        id: 1,
-                        exercise: "pull up",
-                        sets: [8, 10, 12],
-                        time_between: 90, // in seconds
-                    },
-                ],
-            },
-            {
-                id: 1,
-                day: "day2 nigga",
-                exercises: [
-                    {
-                        id: 0,
-                        exercise: "squats",
-                        sets: [15, 20, 25],
-                        time_between: 60, // in seconds
-                    },
-                    {
-                        id: 1,
-                        exercise: "lunges",
-                        sets: [12, 15, 18],
-                        time_between: 60, // in seconds
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: 1,
-        plan: "plan2",
-
-        days: [
-            {
-                id: 0,
-                day: "the bulk",
-                exercises: [
-                    {
-                        id: 0,
-                        exercise: "plank",
-                        sets: [60, 60, 60], // duration in seconds
-                        time_between: 30, // in seconds
-                    },
-                    {
-                        id: 1,
-                        exercise: "mountain climbers",
-                        sets: [20, 25, 30],
-                        time_between: 45, // in seconds
-                    },
-                    {
-                        id: 2,
-                        exercise: "plank",
-                        sets: [60, 60, 60], // duration in seconds
-                        time_between: 30, // in seconds
-                    },
-                    {
-                        id: 3,
-                        exercise: "mountain climbers",
-                        sets: [20, 25, 30],
-                        time_between: 45, // in seconds
-                    },
-                    {
-                        id: 4,
-                        exercise: "plank",
-                        sets: [60, 60, 30, 45, 60], // duration in seconds
-                        time_between: 30, // in seconds
-                    },
-                    {
-                        id: 5,
-                        exercise: "mountain climbers",
-                        sets: [20, 25, 30, 30, 45],
-                        time_between: 45, // in seconds
-                    },
-                    {
-                        id: 6,
-                        exercise: "plank",
-                        sets: [60, 45, 30, 45, 60, 60], // duration in seconds
-                        time_between: 30, // in seconds
-                    },
-                    {
-                        id: 7,
-                        exercise: "mountain climbers",
-                        sets: [20, 25, 30, 45, 54, 45],
-                        time_between: 45, // in seconds
-                    },
-                ],
-            },
-            {
-                id: 1,
-                day: "the cut",
-                exercises: [
-                    {
-                        id: 0,
-                        exercise: "burpees",
-                        sets: [10, 12, 15],
-                        time_between: 60, // in seconds
-                    },
-                    {
-                        id: 1,
-                        exercise: "sit ups",
-                        sets: [20, 25, 30],
-                        time_between: 60, // in seconds
-                    },
-                ],
-            },
-        ],
-    },
-];
-localStorage.setItem("plans", JSON.stringify(Plans));
 function App() {
     return (
-        <div
-            style={{
-                fontFamily: "Poppins",
-                fontWeight: "600",
-                fontStyle: "normal",
-            }}>
-            <Toaster />
-            <Header />
-            <Outlet />
-        </div>
+        <>
+            <div
+                className=" sm:hidden"
+                style={{
+                    fontFamily: "Poppins",
+                    fontWeight: "600",
+                    fontStyle: "normal",
+                }}>
+                <Toaster />
+                <Header />
+                <Outlet />
+            </div>{" "}
+            <div
+                style={{
+                    fontFamily: "Poppins",
+                    fontWeight: "600",
+                    fontStyle: "normal",
+                }}
+                className="h-[100dvh] flex items-center justify-center w-full text-[1.10rem]">
+                Use a smaller screen for a better experience
+            </div>
+        </>
     );
 }
 

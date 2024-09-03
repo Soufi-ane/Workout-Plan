@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 const plansState = {
     plans: [],
 };
 
 const getPlans = () => {
-    let plans = localStorage.getItem("plans");
-    return plans ? JSON.parse(plans) : [];
+    return JSON.parse(localStorage.getItem("plans")) || [];
 };
 
 const plansSlice = createSlice({
@@ -14,22 +14,27 @@ const plansSlice = createSlice({
     initialState: getPlans(),
     reducers: {
         addPlan: (state, action) => {
-            state.push({
+            state?.push({
                 id: state.length,
                 plan: action.payload,
                 days: [],
             });
         },
+        deletePlan: (state, action) => {
+            const newPlans = state.filter((p) => p.id !== action.payload);
+            return newPlans;
+        },
+        deleteDay: (state, action) => {
+            const { plan, day } = action.payload;
+            state[plan].days = state[plan].days.filter((d) => d.id !== day);
+        },
         addDay: (state, action) => {
             const { plan, day } = action.payload;
-            state[plan].days = [
-                ...state[plan].days,
-                {
-                    id: state[plan].days.length,
-                    day,
-                    exercises: [],
-                },
-            ];
+            state[plan]?.days.push({
+                id: state[plan].days.length,
+                day,
+                exercises: [],
+            });
         },
         addExercise: (state, action) => {
             const { plan, day, exercise, sets, time_between, image } = action.payload;
@@ -52,12 +57,19 @@ const plansSlice = createSlice({
             state[plan].days[day].exercises = NewExercises;
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(updateLocalStorage.fulfilled, (state, action) => {
+            toast.dismiss();
+            toast.success(action.payload);
+        });
+    },
 });
 
-export const updateLocalStorage = createAsyncThunk("plans/updateLocalStorage", async (_, { getState }) => {
-    const plans = getState().plans;
+export const updateLocalStorage = createAsyncThunk("plans/updateLocalStorage", async (id, { getState }) => {
+    const { plans } = getState();
     localStorage.setItem("plans", JSON.stringify(plans));
+    return id;
 });
 
 export default plansSlice.reducer;
-export const { addPlan, addDay, addExercise, deleteExercise } = plansSlice.actions;
+export const { addPlan, deletePlan, addDay, deleteDay, addExercise, deleteExercise } = plansSlice.actions;
